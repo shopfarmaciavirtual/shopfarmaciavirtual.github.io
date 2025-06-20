@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmácia Neway AQC - Sua Saúde em Primeiro Lugar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .pharmacy-gradient {
+            background: linear-gradient(135deg, #0d9488 0%, #115e59 100%);
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .cart-item:hover {
+            background-color: #f0fdfa;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Carousel Styles */
+        .carousel-container {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .carousel-slide {
+            min-width: 25%;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+
+        @media (max-width: 1024px) {
+            .carousel-slide {
+                min-width: 33.33%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .carousel-slide {
+                min-width: 50%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .carousel-slide {
+                min-width: 100%;
+            }
+        }
+
+        /* Stamped Cover Image */
+        .stamped-image {
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.5rem;
+        }
+
+        .stamped-image::after {
+            content: "NEWAY AQC";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-15deg);
+            font-size: 3rem;
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.2);
+            background: linear-gradient(45deg, rgba(13, 148, 136, 0.3), rgba(17, 94, 89, 0.3));
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .stamped-image img {
+            position: relative;
+            z-index: 2;
+            transition: transform 0.3s ease;
+        }
+
+        .stamped-image:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Service Card */
+        .service-card {
+            transition: all 0.3s ease;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .service-icon {
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover .service-icon {
+            transform: scale(1.1);
+        }
+
+        @keyframes scroll {
+            0% {
+                transform: translateX(100%);
+            }
+
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        .animate-scroll {
+            display: inline-block;
+            animation: scroll 40s linear infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 font-sans">
+    <!-- Header/Navbar -->
+    <header class="pharmacy-gradient text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center">
+                        <i class="fas fa-pills text-3xl mr-2"></i>
+                        <h1 class="text-2xl font-bold">Farmácia Neway AQC</h1>
+                    </div>
+                </div>
+
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="#home" class="hover:text-teal-200 transition">Início</a>
+                    <a href="#products" class="hover:text-teal-200 transition">Produtos</a>
+                    <a href="#about" class="hover:text-teal-200 transition">Sobre Nós</a>
+                    <a href="#contact" class="hover:text-teal-200 transition">Contato</a>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <button id="cart-btn" class="relative">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                        <span id="cart-count"
+                            class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                    </button>
+                    <button id="login-btn"
+                        class="bg-white text-teal-800 px-4 py-1 rounded-full font-medium hover:bg-teal-100 transition">Entrar</button>
+                    <button class="md:hidden" id="mobile-menu-btn">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden mt-4 pb-2">
+                <a href="#home" class="block py-2 hover:bg-teal-700 px-2 rounded">Início</a>
+                <a href="#products" class="block py-2 hover:bg-teal-700 px-2 rounded">Produtos</a>
+                <a href="#about" class="block py-2 hover:bg-teal-700 px-2 rounded">Sobre Nós</a>
+                <a href="#contact" class="block py-2 hover:bg-teal-700 px-2 rounded">Contato</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Carousel Banner Below Navbar -->
+    <div class="bg-teal-900 text-white overflow-hidden relative">
+        <div class="whitespace-nowrap animate-scroll font-medium text-sm py-2 px-4">
+            <span class="inline-block mr-12">💊 Promoção: 20% de desconto em todos os medicamentos genéricos!</span>
+            <span class="inline-block mr-12">🕒 Atendimento 24h online com farmacêuticos ao vivo!</span>
+            <span class="inline-block mr-12">🚚 Entrega expressa grátis na primeira compra!</span>
+            <span class="inline-block mr-12">📞 Ligue agora: +244 999 000 000</span>
+            <span class="inline-block mr-12">💚 Neway AQC - Cuidando da sua saúde com carinho!</span>
+        </div>
+    </div>
+
+
+    <!-- Hero Section -->
+    <section id="home" class="pharmacy-gradient text-white py-16">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 mb-8 md:mb-0">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">Sua saúde em primeiro lugar</h2>
+                <p class="text-xl mb-6">Medicamentos, produtos de beleza e cuidados pessoais com entrega rápida ou
+                    retirada na loja.</p>
+                <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
+                    <a href="#products"
+                        class="bg-white text-teal-800 px-6 py-3 rounded-full font-bold text-center hover:bg-teal-100 transition">Comprar
+                        Agora</a>
+                    <a href="#delivery"
+                        class="border-2 border-white text-white px-6 py-3 rounded-full font-bold text-center hover:bg-white hover:text-teal-800 transition">Entrega
+                        em Casa</a>
+                </div>
+            </div><!--Imagem no navbar-->
+            <div class="md:w-1/2 flex justify-center">
+                <div class="stamped-image">
+                    <img src="https://images.unsplash.com/photo-1587854692152-cbe660dbde88?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1469&q=80"
+                        alt="Farmácia" class="rounded-lg shadow-2xl max-w-md w-full">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="bg-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-teal-50 p-6 rounded-lg text-center">
+                    <div class="bg-teal-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-truck text-teal-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Entrega Rápida</h3>
+                    <p class="text-gray-600">Receba seus produtos em até 2 horas na região metropolitana.</p>
+                </div>
+                <div class="bg-teal-50 p-6 rounded-lg text-center">
+                    <div class="bg-teal-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-pills text-teal-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Farmácia 24h</h3>
+                    <p class="text-gray-600">Atendimento online 24 horas por dia, 7 dias por semana.</p>
+                </div>
+                <div class="bg-teal-50 p-6 rounded-lg text-center">
+                    <div class="bg-teal-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-user-md text-teal-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Farmacêuticos Online</h3>
+                    <p class="text-gray-600">Tire suas dúvidas com nossos profissionais qualificados.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Carousel Section -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">Nossos Serviços</h2>
+
+            <div class="carousel-container relative">
+                <div class="carousel-track" id="carousel-track">
+                    <!-- Service 1 -->
+                    <div class="carousel-slide px-2">
+                        <div class="service-card bg-white h-full flex flex-col">
+                            <div class="overflow-hidden rounded-t-lg">
+                                <img src="https://images.unsplash.com/photo-1587854692152-cbe660dbde88?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
+                                    alt="Entrega de Medicamentos" class="w-full h-48 object-cover">
+                            </div>
+                            <div class="p-4 flex-grow">
+                                <div
+                                    class="service-icon bg-teal-100 w-12 h-12 rounded-full flex items-center justify-center mb-3 mx-auto">
+                                    <i class="fas fa-truck text-teal-600 text-xl"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-center mb-2">Entrega Expressa</h3>
+                                <p class="text-gray-600 text-center">Receba seus medicamentos em até 2 horas na sua
+                                    casa.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Service 2 -->
+                    <div class="carousel-slide px-2">
+                        <div class="service-card bg-white h-full flex flex-col">
+                            <div class="overflow-hidden rounded-t-lg">
+                                <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
+                                    alt="Consulta Farmacêutica" class="w-full h-48 object-cover">
+                            </div>
+                            <div class="p-4 flex-grow">
+                                <div
+                                    class="service-icon bg-teal-100 w-12 h-12 rounded-full flex items-center justify-center mb-3 mx-auto">
+                                    <i class="fas fa-user-md text-teal-600 text-xl"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-center mb-2">Consulta Online</h3>
+                                <p class="text-gray-600 text-center">Orientações farmacêuticas por videochamada ou chat.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Service 3 -->
+                    <div class="carousel-slide px-2">
+                        <div class="service-card bg-white h-full flex flex-col">
+                            <div class="overflow-hidden rounded-t-lg">
+                                <img src="https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
+                                    alt="Manipulação de Medicamentos" class="w-full h-48 object-cover">
+                            </div>
+                            <div class="p-4 flex-grow">
+                                <div
+                                    class="service-icon bg-teal-100 w-12 h-12 rounded-full flex items-center justify-center mb-3 mx-auto">
+                                    <i class="fas fa-mortar-pestle text-teal-600 text-xl"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-center mb-2">Manipulação</h3>
+                                <p class="text-gray-600 text-center">Medicamentos personalizados conforme sua
+                                    necessidade.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Service 4 -->
+                    <div class="carousel-slide px-2">
+                        <div class="service-card bg-white h-full flex flex-col">
+                            <div class="overflow-hidden rounded-t-lg">
+                                <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
+                                    alt="Vacinação" class="w-full h-48 object-cover">
+                            </div>
+                            <div class="p-4 flex-grow">
+                                <div
+                                    class="service-icon bg-teal-100 w-12 h-12 rounded-full flex items-center justify-center mb-3 mx-auto">
+                                    <i class="fas fa-syringe text-teal-600 text-xl"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-center mb-2">Vacinação</h3>
+                                <p class="text-gray-600 text-center">Todas as vacinas com profissionais qualificados.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Service 5 -->
+                    <div class="carousel-slide px-2">
+                        <div class="service-card bg-white h-full flex flex-col">
+                            <div class="overflow-hidden rounded-t-lg">
+                                <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
+                                    alt="Exames Laboratoriais" class="w-full h-48 object-cover">
+                            </div>
+                            <div class="p-4 flex-grow">
+                                <div
+                                    class="service-icon bg-teal-100 w-12 h-12 rounded-full flex items-center justify-center mb-3 mx-auto">
+                                    <i class="fas fa-flask text-teal-600 text-xl"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-center mb-2">Exames</h3>
+                                <p class="text-gray-600 text-center">Coleta de exames laboratoriais com conforto.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Service 6 -->
+                    <div class="carousel-slide px-2">
+                        <div class="service-card bg-white h-full flex flex-col">
+                            <div class="overflow-hidden rounded-t-lg">
+                                <!-- CONTINUAÇÃO DO SITE -->
+                                <!-- Service 4 (continuação da última div cortada) -->
+                                <img src="img/ilustracao4.webp"
+                                    alt="Teste Rápido" class="w-full h-48 object-cover">
+                            </div>
+                            <div class="p-4 flex-grow">
+                                <div
+                                    class="service-icon bg-teal-100 w-12 h-12 rounded-full flex items-center justify-center mb-3 mx-auto">
+                                    <i class="fas fa-vial text-teal-600 text-xl"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-center mb-2">Testes Rápidos</h3>
+                                <p class="text-gray-600 text-center">Covid-19, diabetes, colesterol e outros exames na
+                                    hora.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Depoimentos -->
+<section class="bg-teal-50 py-16 overflow-hidden" id="depoimentos">
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl font-bold text-center mb-12">O que dizem nossos clientes</h2>
+
+    <!-- Área com overflow horizontal e animação -->
+    <div class="relative w-full overflow-hidden">
+      <div class="flex gap-8 animate-scroll-slow w-[200%]">
+        <!-- Lista duplicada para looping visual contínuo -->
+        <div class="flex gap-8 min-w-full">
+          <!-- Card 1 -->
+          <div class="bg-white p-6 rounded-lg shadow text-center w-80 shrink-0">
+            <img src="https://randomuser.me/api/portraits/women/65.jpg" class="w-16 h-16 mx-auto rounded-full mb-4" alt="Cliente">
+            <p class="text-gray-600 italic">"Excelente atendimento! Fiz uma consulta online e recebi meus medicamentos no mesmo dia."</p>
+            <h4 class="font-semibold mt-4 text-teal-800">Maria João</h4>
+          </div>
+          <!-- Card 2 -->
+          <div class="bg-white p-6 rounded-lg shadow text-center w-80 shrink-0">
+            <img src="https://randomuser.me/api/portraits/men/42.jpg" class="w-16 h-16 mx-auto rounded-full mb-4" alt="Cliente">
+            <p class="text-gray-600 italic">"A Neway me salvou com entrega rápida quando mais precisei. Super recomendo!"</p>
+            <h4 class="font-semibold mt-4 text-teal-800">Carlos Alberto</h4>
+          </div>
+          <!-- Card 3 -->
+          <div class="bg-white p-6 rounded-lg shadow text-center w-80 shrink-0">
+            <img src="https://randomuser.me/api/portraits/women/90.jpg" class="w-16 h-16 mx-auto rounded-full mb-4" alt="Cliente">
+            <p class="text-gray-600 italic">"Medicamentos de qualidade, atendimento impecável e ainda recebi um brinde. Amei!"</p>
+            <h4 class="font-semibold mt-4 text-teal-800">Ana Paula</h4>
+          </div>
+          <!-- Card 4 -->
+          <div class="bg-white p-6 rounded-lg shadow text-center w-80 shrink-0">
+            <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-16 h-16 mx-auto rounded-full mb-4" alt="Cliente">
+            <p class="text-gray-600 italic">"Fiquei impressionado com a atenção dos atendentes. Excelente!"</p>
+            <h4 class="font-semibold mt-4 text-teal-800">João Manuel</h4>
+          </div>
+        </div>
+
+        <!-- Repetição dos mesmos cards para efeito contínuo -->
+        <div class="flex gap-8 min-w-full">
+          <div class="bg-white p-6 rounded-lg shadow text-center w-80 shrink-0">
+            <img src="https://randomuser.me/api/portraits/women/65.jpg" class="w-16 h-16 mx-auto rounded-full mb-4" alt="Cliente">
+            <p class="text-gray-600 italic">"Excelente atendimento! Fiz uma consulta online e recebi meus medicamentos no mesmo dia."</p>
+            <h4 class="font-semibold mt-4 text-teal-800">Maria João</h4>
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow text-center w-80 shrink-0">
+            <img src="https://randomuser.me/api/portraits/men/42.jpg" class="w-16 h-16 mx-auto rounded-full mb-4" alt="Cliente">
+            <p class="text-gray-600 italic">"A Neway me salvou com entrega rápida quando mais precisei. Super recomendo!"</p>
+            <h4 class="font-semibold mt-4 text-teal-800">Carlos Alberto</h4>
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow text-center w-80 shrink-0">
+            <img src="https://randomuser.me/api/portraits/women/90.jpg" class="w-16 h-16 mx-auto rounded-full mb-4" alt="Cliente">
+            <p class="text-gray-600 italic">"Medicamentos de qualidade, atendimento impecável e ainda recebi um brinde. Amei!"</p>
+            <h4 class="font-semibold mt-4 text-teal-800">Ana Paula</h4>
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow text-center w-80 shrink-0">
+            <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-16 h-16 mx-auto rounded-full mb-4" alt="Cliente">
+            <p class="text-gray-600 italic">"Fiquei impressionado com a atenção dos atendentes. Excelente!"</p>
+            <h4 class="font-semibold mt-4 text-teal-800">João Manuel</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Estilo da animação -->
+<style>
+  @keyframes scroll-slow {
+    0% {
+      transform: translateX(0%);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .animate-scroll-slow {
+    animation: scroll-slow 40s linear infinite;
+  }
+</style>
+
+
+    <!--Depoimentos-->
+    <section class="bg-teal-50 py-16" id="depoimentos">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">O que dizem nossos clientes</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow text-center">
+                    <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Cliente"
+                        class="w-16 h-16 mx-auto rounded-full mb-4">
+                    <p class="text-gray-600 italic">"Excelente atendimento! Fiz uma consulta online e recebi meus
+                        medicamentos no mesmo dia."</p>
+                    <h4 class="font-semibold mt-4 text-teal-800">Maria João</h4>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow text-center">
+                    <img src="https://randomuser.me/api/portraits/men/42.jpg" alt="Cliente"
+                        class="w-16 h-16 mx-auto rounded-full mb-4">
+                    <p class="text-gray-600 italic">"A Neway me salvou com entrega rápida quando mais precisei. Super
+                        recomendo!"</p>
+                    <h4 class="font-semibold mt-4 text-teal-800">Carlos Alberto</h4>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow text-center">
+                    <img src="https://randomuser.me/api/portraits/women/90.jpg" alt="Cliente"
+                        class="w-16 h-16 mx-auto rounded-full mb-4">
+                    <p class="text-gray-600 italic">"Medicamentos de qualidade, atendimento impecável e ainda recebi um
+                        brinde. Amei!"</p>
+                    <h4 class="font-semibold mt-4 text-teal-800">Ana Paula</h4>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow text-center">
+                    <img src="https://randomuser.me/api/portraits/women/90.jpg" alt="Cliente"
+                        class="w-16 h-16 mx-auto rounded-full mb-4">
+                    <p class="text-gray-600 italic">"Medicamentos de qualidade, atendimento impecável e ainda recebi um
+                        brinde. Amei!"</p>
+                    <h4 class="font-semibold mt-4 text-teal-800">Ana Paula</h4>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow text-center">
+                    <img src="https://randomuser.me/api/portraits/women/90.jpg" alt="Cliente"
+                        class="w-16 h-16 mx-auto rounded-full mb-4">
+                    <p class="text-gray-600 italic">"Medicamentos de qualidade, atendimento impecável e ainda recebi um
+                        brinde. Amei!"</p>
+                    <h4 class="font-semibold mt-4 text-teal-800">Ana Paula</h4>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="py-16 bg-white">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 mb-8 md:mb-0">
+                <img src="https://images.unsplash.com/photo-1606201990311-30fc201aff32?auto=format&fit=crop&w=900&q=80"
+                    alt="Farmácia" class="rounded-lg shadow-lg">
+            </div>
+            <div class="md:w-1/2 md:pl-12">
+                <h2 class="text-3xl font-bold mb-4">Sobre a Farmácia Neway AQC</h2>
+                <p class="text-gray-600 mb-4">Somos uma farmácia moderna, dedicada a oferecer produtos de alta qualidade
+                    com um atendimento humanizado. Nossa missão é cuidar da sua saúde com carinho e responsabilidade,
+                    utilizando tecnologia e equipe qualificada.</p>
+                <p class="text-gray-600">Com atendimento 24h, entrega rápida e profissionais preparados, estamos aqui
+                    para facilitar sua vida e garantir seu bem-estar.</p>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="bg-gray-100 py-12">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl font-bold text-center mb-8">Trabalhamos com as melhores marcas</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-8 items-center justify-center">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Bayer_logo.svg/512px-Bayer_logo.svg.png"
+                    class="mx-auto h-12" alt="Bayer">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Roche_logo.svg/512px-Roche_logo.svg.png"
+                    class="mx-auto h-12" alt="Roche">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Johnson_%26_Johnson_logo.svg/512px-Johnson_%26_Johnson_logo.svg.png"
+                    class="mx-auto h-12" alt="J&J">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Pfizer_logo.svg/512px-Pfizer_logo.svg.png"
+                    class="mx-auto h-12" alt="Pfizer">
+            </div>
+        </div>
+    </section>
+
+    <section class="pharmacy-gradient text-white py-16 text-center">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-4">Quer ainda mais praticidade?</h2>
+            <p class="text-lg mb-6">Acompanhe seus pedidos, fale com farmacêuticos e compre seus medicamentos direto do
+                celular.</p>
+            <a href="#"
+                class="bg-white text-teal-800 px-6 py-3 rounded-full font-bold hover:bg-teal-100 transition">Baixe o App
+                da Neway</a>
+        </div>
+    </section>
+
+
+    <!-- Footer -->
+    <footer class="bg-teal-900 text-white py-8">
+        <div class="container mx-auto px-4 grid md:grid-cols-3 gap-8">
+            <div>
+                <h4 class="text-xl font-bold mb-3">Farmácia Neway AQC</h4>
+                <p class="text-sm">Ajudamos você a viver melhor com saúde, confiança e atendimento humanizado.</p>
+            </div>
+            <div>
+                <h4 class="text-xl font-bold mb-3">Links Rápidos</h4>
+                <ul class="space-y-2">
+                    <li><a href="#home" class="hover:underline">Início</a></li>
+                    <li><a href="#products" class="hover:underline">Produtos</a></li>
+                    <li><a href="#about" class="hover:underline">Sobre</a></li>
+                    <li><a href="#contact" class="hover:underline">Contato</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-xl font-bold mb-3">Contato</h4>
+                <p><i class="fas fa-map-marker-alt mr-2"></i> Rua da Saúde, Luanda, Angola</p>
+                <p><i class="fas fa-phone mr-2"></i> +244 999 000 000</p>
+                <p><i class="fas fa-envelope mr-2"></i> atendimento@newayaqc.com</p>
+            </div>
+        </div>
+        <div class="text-center text-sm mt-8 border-t border-teal-700 pt-4">
+            &copy; 2025 Farmácia Neway AQC. Todos os direitos reservados. | Criado por: QLISOFT LDA
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+
+</html>
+
+</html>
